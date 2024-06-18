@@ -18,7 +18,7 @@ class Book(models.Model):
 
     summary = models.TextField(max_length=1000, help_text="Enter a brief description of the book")
     isbn = models.CharField('ISBN',max_length=13, help_text='13 Character <a href="https://www.isbn-international.org/content/what-isbn">ISBN number</a>')
-    language = models.CharField(max_length=100)
+    language = models.CharField(max_length=100, help_text='the language in which the book is written')
     genre = models.ManyToManyField(Genre, help_text="Select a genre for this book")
 
     def __str__(self):

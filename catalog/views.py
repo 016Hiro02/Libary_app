@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 import datetime
 from .forms import RenewBookForm
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Author
 
@@ -121,11 +121,39 @@ def renew_book_librarian(request, pk):
 class AuthorCreate(CreateView):
     model = Author
     fields = '__all__'
+    template_name ='/Libary_app/catalog/templates/author_form.html'
+    success_url = reverse_lazy('authors')
 
 class AuthorUpdate(UpdateView):
     model = Author
     fields = ['first_name','last_name','date_of_birth','date_of_death']
+    template_name ='/Libary_app/catalog/templates/author_form.html'
+    success_url = reverse_lazy('authors')
 
 class AuthorDelete(DeleteView):
     model = Author
     success_url = reverse_lazy('authors')
+    template_name ='/Libary_app/catalog/templates/author_confirm_delete.html'
+
+class BookCreate(CreateView):
+    model = Book
+    fields = '__all__'
+    template_name ='/Libary_app/catalog/templates/Book_form.html'
+    success_url = reverse_lazy('books')
+
+class BookUpdate(UpdateView):
+    model = Book
+    fields = '__all__'
+    template_name ='/Libary_app/catalog/templates/Book_form.html'
+    success_url = reverse_lazy('books')
+
+class BookDelete(DeleteView):
+    model = Book
+    success_url = reverse_lazy('books')
+    template_name ='/Libary_app/catalog/templates/Book_confirm_delete.html'
+
+def fokus(request, pk):
+    bookins = get_object_or_404(BookInstance, pk=pk)
+    bookins.status = 'a'
+    bookins.due_back = None
+    return HttpResponseRedirect(reverse('my-borrowed') )
