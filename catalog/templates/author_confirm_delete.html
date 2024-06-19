@@ -9,4 +9,5 @@
     {% csrf_token %}
     <input type="submit" value="Yes, delete." />
   </form>
+  <a href="{% url 'books' %}">no, go back</a>
 {% endblock %}

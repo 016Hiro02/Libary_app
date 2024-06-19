@@ -1,4 +1,4 @@
-from django.urls import re_path
+from django.urls import re_path , include
 from . import views
 
 urlpatterns = [
@@ -28,6 +28,8 @@ urlpatterns += [
     re_path(r'^book/(?P<pk>\d+)/delete/$', views.BookDelete.as_view(), name='book_delete'),
 ]
 
+
 urlpatterns += [
-    re_path(r'^libM/(?P<id>\d+)/fokus/$', views.fokus, name='fokus')
+    re_path(r'^bookinst/(?P<pk>[-\w]+)/fokus/$', views.fokus.as_view(), name='fokus'),
+    re_path(r'^bookinst/(?P<pk>[-\w]+)/fokus2/$', views.fokus2, name='fokus2'),
 ]
