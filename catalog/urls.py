@@ -13,6 +13,11 @@ urlpatterns = [
 ]
 
 urlpatterns += [
+    re_path(r'^book_instances/$', views.BookInstanceListView.as_view(), name='bookinstances'),
+    re_path(r'^genres/$', views.GenreListView.as_view(), name='genres'),
+]
+
+urlpatterns += [
     re_path(r'^book/(?P<pk>[-\w]+)/renew/$', views.renew_book_librarian, name='renew-book-librarian'),
 ]
 
@@ -26,6 +31,18 @@ urlpatterns += [
     re_path(r'^book/create/$', views.BookCreate.as_view(), name='book_create'),
     re_path(r'^book/(?P<pk>\d+)/update/$', views.BookUpdate.as_view(), name='book_update'),
     re_path(r'^book/(?P<pk>\d+)/delete/$', views.BookDelete.as_view(), name='book_delete'),
+]
+
+urlpatterns += [
+    re_path(r'^genres/create/$', views.GenreCreate.as_view(), name='genre_create'),
+    re_path(r'^genres/(?P<pk>\d+)/update/$', views.GenreUpdate.as_view(), name='genre_update'),
+    re_path(r'^genres/(?P<pk>\d+)/delete/$', views.GenreDelete.as_view(), name='genre_delete'),
+]
+
+urlpatterns += [
+    re_path(r'^book_instance/create/$', views.BookInstanceCreate.as_view(), name='bookinstance_create'),
+    re_path(r'^book_instance/(?P<pk>[-\w]+)/update/$', views.BookInstanceUpdate.as_view(), name='bookinstance_update'),
+    re_path(r'^book_instance/(?P<pk>[-\w]+)/delete/$', views.BookInstanceDelete.as_view(), name='bookinstance_delete'),
 ]
 
 

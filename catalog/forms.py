@@ -19,10 +19,3 @@ class RenewBookForm(forms.Form):
 
         return data
 
-class Fokus2(forms.ModelForm):
-    class meta:
-        model = BookInstance
-        fields = ['due_back','status']
-        disabled = {'due_back' : True, 'status':True,}
-        initial = {'due_back' : datetime.date.today() + datetime.timedelta(weeks=2), 'status':'r',}
-        

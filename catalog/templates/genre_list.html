@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Genre List</h1>
+
+    {% if genre_list %}
+        <ul>
+
+        {% for genre in genre_list %}
+        <li>
+            {{genre.name}}
+            {% if perms.catalog.change_genre %}
+                <a href="{% url 'genre_update' genre.pk %}"> | Обновить жанр</a>
+            {% endif %}
+            {% if perms.catalog.delete_genre %}
+                <a href="{% url 'genre_delete' genre.pk %}"> | Удалить жанр</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+        {% if perms.catalog.add_genre %}
+            <li><a href="{% url 'genre_create' %}">Добавить жанр</a></li>
+        {% endif %}
+        </ul>
+    {% else %}
+        <p>В библиотеке нет жанров</p>
+    {% endif %}
+    {% block pagination %}
+        {% if is_paginated %}
+            <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="page-current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+            </div>
+        {% endif %}
+    {% endblock %}
+{% endblock %}

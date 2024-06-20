@@ -40,6 +40,12 @@
                   <li style="list-style:none;">staff</li>
                   <li><a href="{% url 'libM' %}">all borrowed</a></li>
               {% endif %}
+              {% if perms.catalog.can_view_book_instances %}
+                  <li><a href="{% url 'bookinstances' %}">book instances</a></li>
+              {% endif %}
+              {% if perms.catalog.can_view_genres %}
+                  <li><a href="{% url 'genres' %}">genres</a></li>
+              {% endif %}
               {% if user.is_superuser %}
               <hr>
                 <li style="list-style:none;">Admin Powers</li>

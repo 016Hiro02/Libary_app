@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django import forms
 from .models import Book, Author, BookInstance, Genre
 from django.views import generic
 from django.contrib.auth.decorators import login_required, permission_required
@@ -7,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 import datetime
-from .forms import RenewBookForm, Fokus2
+from .forms import RenewBookForm
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Author
@@ -79,6 +80,28 @@ def AuthorDetailView(request,pk):
         request,
         'author_detail.html',
         context={'author':author_id,})
+
+class BookInstanceListView(LoginRequiredMixin, generic.ListView):
+    model = BookInstance
+
+    paginate_by = 5
+
+    template_name= '/Libary_app/catalog/templates/book_instance_list.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(BookInstanceListView, self).get_context_data(**kwargs)
+        context['some_data'] = 'This is just some data'
+        return context
+
+class GenreListView(LoginRequiredMixin, generic.ListView):
+    model = Genre
+    paginate_by = 6
+    template_name= '/Libary_app/catalog/templates/genre_list.html'
+    def get_context_data(self, **kwargs):
+        context = super(GenreListView, self).get_context_data(**kwargs)
+        context['some_data'] = 'This is just some data'
+        return context
+
 
 def meme(request):
     bebra = 'imma firin mah laser'
@@ -158,6 +181,48 @@ class BookDelete(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('books')
     template_name ='/Libary_app/catalog/templates/Book_confirm_delete.html'
 
+class BookInstanceCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('catalog.create_bookinstance')
+    model = BookInstance
+    fields = '__all__'
+    template_name ='/Libary_app/catalog/templates/BookInstance_form.html'
+    success_url = reverse_lazy('booksbookinstances')
+
+class BookInstanceUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('catalog.change_bookinstance')
+    model = BookInstance
+    fields = '__all__'
+    template_name ='/Libary_app/catalog/templates/BookInstance_form.html'
+    success_url = reverse_lazy('booksbookinstances')
+
+class BookInstanceDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('catalog.delete_bookinstance')
+    model = BookInstance
+    success_url = reverse_lazy('booksbookinstances')
+    template_name ='/Libary_app/catalog/templates/BookInstance_confirm_delete.html'
+
+class GenreCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('catalog.create_genre')
+    model = Genre
+    fields = '__all__'
+    template_name ='/Libary_app/catalog/templates/genre_form.html'
+    success_url = reverse_lazy('Genres')
+
+class GenreUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('catalog.change_genre')
+    model = Genre
+    fields = '__all__'
+    template_name ='/Libary_app/catalog/templates/genre_form.html'
+    success_url = reverse_lazy('Genres')
+
+class GenreDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('catalog.delete_genre')
+    model = Genre
+    success_url = reverse_lazy('Genres')
+    template_name ='/Libary_app/catalog/templates/genre_confirm_delete.html'
+
+
+
 '''
 @permission_required('catalog.can_mark_returned')
 def fokus(request, pk):
@@ -177,5 +242,13 @@ class fokus(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy('libM')
     initial={'due_back':None,'status':'a','borrower':None}
 
-class fokus2(Fokus2):
-    success_url = reverse_lazy('books')
+
+def fokus2(request, pk):
+    bookinst = get_object_or_404(BookInstance, pk=pk)
+    bookinst.due_back= datetime.date.today() + datetime.timedelta(weeks=2)
+    bookinst.status= 'r'
+    bookinst.borrower = request.user
+    bookinst.save()
+    back_url = request.META["HTTP_REFERER"] or request.path
+
+    return redirect(back_url)
