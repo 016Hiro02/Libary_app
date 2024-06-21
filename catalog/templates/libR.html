@@ -2,7 +2,7 @@
 
 {% block content %}
     
-    <h1>All Borrowed books</h1>
+    <h1>All reserved books</h1>
 
     {% if bookinstance_list %}
     <ul>
@@ -11,16 +11,16 @@
       <li class="{% if bookinst.is_overdue %}text-danger{% endif %}">
         <a href="{% url 'book-detail' bookinst.book.pk %}">{{bookinst.book.title}}</a> ({{ bookinst.due_back }}) - {{bookinst.borrower}}
         {% if perms.catalog.can_mark_returned %}
-          <a href="{% url 'renew-book-librarian' bookinst.id %}">| Renew</a>
+          <a href="{% url 'approvebook' bookinst.id %}">| approve</a>
         {% endif %}
         {% if perms.catalog.change_bookinstance %}
-          <a href="{% url 'fokus' bookinst.id %}">| Return</a>
+          <a href="{% url 'fokus' bookinst.id %}">| decline</a>
         {% endif %}
       </li>
       {% endfor %}
     </ul>
 
     {% else %}
-      <p>There are no books borrowed.</p>
+      <p>There are no books reserved.</p>
     {% endif %}
 {% endblock %}

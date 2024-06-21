@@ -1,28 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Author List</h1>
+    <h1>Genre List</h1>
 
-    {% if author_list %}
+    {% if genre_list %}
         <ul>
 
-        {% for author in author_list %}
+        {% for genre in genre_list %}
         <li>
-            <a href="{{ author.get_absolute_url }}">{{author.last_name}} {{author.first_name}} ({% if author.date_of_birth != null %} {{author.date_of_birth}} {% else %} no info {% endif %} - {% if author.date_of_death != null %} {{author.date_of_death}} {% else %} not died {% endif %})</a> 
-            {% if perms.catalog.change_author %}
-                <a href="{% url 'author_update' author.pk %}"> | Обновить данные</a>
+            {{genre.name}}
+            {% if perms.catalog.change_genre %}
+                <a href="{% url 'genre_update' genre.pk %}"> | Обновить жанр</a>
             {% endif %}
-            {% if perms.catalog.delete_author %}
-                <a href="{% url 'author_delete' author.pk %}"> | Удалить автора</a>
+            {% if perms.catalog.delete_genre %}
+                <a href="{% url 'genre_delete' genre.pk %}"> | Удалить жанр</a>
             {% endif %}
         </li>
         {% endfor %}
-        {% if perms.catalog.add_author %}
-            <li><a href="{% url 'author_create' %}">Добавить автора</a></li>
+        {% if perms.catalog.add_genre %}
+            <li><a href="{% url 'genre_create' %}">Добавить жанр</a></li>
         {% endif %}
         </ul>
     {% else %}
-        <p>В библиотеке нет авторов</p>
+        <p>В библиотеке нет жанров</p>
     {% endif %}
     {% block pagination %}
         {% if is_paginated %}

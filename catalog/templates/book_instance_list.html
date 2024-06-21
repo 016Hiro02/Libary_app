@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>BookInstance List</h1>
+
+    {% if bookinstance_list %}
+        <ul>
+
+        {% for copy in bookinstance_list %}
+        <li>
+            <hr>
+            <div style="display:flex; gap:10px;">
+            <a href="{{ copy.book.get_absolute_url }}">{{copy.book.title}}</a>
+            <p class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'm' %}text-danger{% else %}text-warning{% endif %}"> {{ copy.get_status_display }}</p>
+            </div>
+            {% if copy.status != 'a' %}<p><strong>Due to be returned:</strong> {{copy.due_back}}</p>{% endif %}
+            <p><strong>Imprint:</strong> {{copy.imprint}}</p>
+            <p class="text-muted"><strong>Id:</strong> {{copy.id}}</p>
+            {% if perms.catalog.change_bookinstance %}
+                <a href="{% url 'bookinstance_update' copy.pk %}"> | Обновить данные</a>
+            {% endif %}
+            {% if perms.catalog.delete_bookinstance %}
+                <a href="{% url 'bookinstance_delete' copy.pk %}"> | Удалить книгу</a>
+            {% endif %}
+        </li>
+        
+        {% endfor %}
+        {% if perms.catalog.add_book_instance %}
+            <li><a href="{% url 'bookinstance_create' %}">Добавить книгу</a></li>
+        {% endif %}
+
+        </ul>
+    {% else %}
+        <p>В библиотеке нет копий книг.</p>
+    {% endif %}
+    {% block pagination %}
+        {% if is_paginated %}
+            <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="page-current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+            </div>
+        {% endif %}
+    {% endblock %}
+{% endblock %}
