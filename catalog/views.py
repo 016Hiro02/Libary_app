@@ -116,10 +116,34 @@ class LBBULV(LoginRequiredMixin,generic.ListView):
     def get_queryset(self):
         return BookInstance.objects.filter(borrower=self.request.user).filter(status__exact='o').order_by('due_back')
 
+class res(LoginRequiredMixin,generic.ListView):
+
+    model = BookInstance
+    template_name ='/Libary_app/catalog/templates/reserved.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return BookInstance.objects.filter(borrower=self.request.user).filter(status__exact='r').order_by('due_back')
+
 @permission_required('catalog.can_mark_returned')
 def libM(request):
     bookinst = BookInstance.objects.filter(status__exact='o').order_by('due_back')
     return render(request, 'libM.html', context={'bookinstance_list':bookinst})
+
+@permission_required('catalog.change_bookinstance')
+def libR(request):
+    bookinst = BookInstance.objects.filter(status__exact='r').order_by('due_back')
+    return render(request, 'libR.html', context={'bookinstance_list':bookinst})
+
+def approveBook(request, pk):
+    bookinst = get_object_or_404(BookInstance, pk=pk)
+    bookinst.due_back= datetime.date.today() + datetime.timedelta(weeks=3)
+    bookinst.status= 'o'
+    bookinst.borrower = request.user
+    bookinst.save()
+    back_url = request.META["HTTP_REFERER"] or request.path
+
+    return redirect(back_url)
 
 @permission_required('catalog.can_mark_returned')
 def renew_book_librarian(request, pk):

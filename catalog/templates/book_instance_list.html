@@ -16,10 +16,10 @@
             {% if copy.status != 'a' %}<p><strong>Due to be returned:</strong> {{copy.due_back}}</p>{% endif %}
             <p><strong>Imprint:</strong> {{copy.imprint}}</p>
             <p class="text-muted"><strong>Id:</strong> {{copy.id}}</p>
-            {% if perms.catalog.change_book_instance %}
+            {% if perms.catalog.change_bookinstance %}
                 <a href="{% url 'bookinstance_update' copy.pk %}"> | Обновить данные</a>
             {% endif %}
-            {% if perms.catalog.delete_book_instance %}
+            {% if perms.catalog.delete_bookinstance %}
                 <a href="{% url 'bookinstance_delete' copy.pk %}"> | Удалить книгу</a>
             {% endif %}
         </li>

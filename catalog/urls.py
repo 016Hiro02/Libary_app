@@ -9,7 +9,10 @@ urlpatterns = [
     re_path(r'^author/(?P<pk>\d+)$', views.AuthorDetailView, name='author-detail'),
     re_path(r'^meme/$', views.meme, name='meme'),
     re_path(r'^mybooks/$', views.LBBULV.as_view(), name='my-borrowed'),
-    re_path(r'^libM/$', views.libM, name='libM')
+    re_path(r'^myreservedbooks/$', views.res.as_view(), name='my-reserved'),
+    re_path(r'^libM/$', views.libM, name='libM'),
+    re_path(r'^libR/$', views.libR, name='libR')
+
 ]
 
 urlpatterns += [
@@ -19,6 +22,7 @@ urlpatterns += [
 
 urlpatterns += [
     re_path(r'^book/(?P<pk>[-\w]+)/renew/$', views.renew_book_librarian, name='renew-book-librarian'),
+    re_path(r'^bookinst/(?P<pk>[-\w]+)/approve/$', views.approveBook, name='approvebook'),
 ]
 
 urlpatterns += [
@@ -45,8 +49,8 @@ urlpatterns += [
     re_path(r'^book_instance/(?P<pk>[-\w]+)/delete/$', views.BookInstanceDelete.as_view(), name='bookinstance_delete'),
 ]
 
-
 urlpatterns += [
     re_path(r'^bookinst/(?P<pk>[-\w]+)/fokus/$', views.fokus.as_view(), name='fokus'),
     re_path(r'^bookinst/(?P<pk>[-\w]+)/fokus2/$', views.fokus2, name='fokus2'),
+
 ]
